@@ -19,8 +19,8 @@ jobs:
 
       - name: Verificar arquivos HTML
         run: |
-          echo "Verificando estrutura do projeto..."
-          test -f index.html
+          echo "Arquivo index.html encontrado!"
+          test -f "público/index.html"
           echo "Arquivo index.html encontrado!"
 
       - name: Concluir pipeline
