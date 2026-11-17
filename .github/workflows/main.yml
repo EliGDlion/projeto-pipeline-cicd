@@ -19,9 +19,15 @@ jobs:
 
       - name: Verificar arquivos HTML
         run: |
-          echo "Arquivo index.html encontrado!"
-          test -f "público/index.html"
-          echo "Arquivo index.html encontrado!"
+          echo "Listando arquivos HTML encontrados:"
+          find . -name "*.html"
+
+          if test -f "./público/index.html"; then
+            echo "Arquivo index.html encontrado!"
+          else
+            echo "Arquivo index.html não encontrado!"
+            exit 1
+          fi
 
       - name: Concluir pipeline
         run: echo "Pipeline executado com sucesso!"
