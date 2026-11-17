@@ -22,7 +22,7 @@ jobs:
           echo "Listando arquivos HTML encontrados:"
           find . -name "*.html"
 
-          if test -f "./público/index.html"; then
+          if test -f "./public/index.html"; then
             echo "Arquivo index.html encontrado!"
           else
             echo "Arquivo index.html não encontrado!"
