@@ -1,0 +1,13 @@
+steps:
+      - name: Baixar codigo
+        uses: actions/checkout@v4
+
+      - name: Verificar arquivos HTML
+        run: |
+          echo "Verificando estrutura do projeto..."
+          test -f index.html
+          echo "Arquivo index.html encontrado!"
+
+      - name: Concluir pipeline
+        run: echo "Pipeline executado com sucesso!"
+      
