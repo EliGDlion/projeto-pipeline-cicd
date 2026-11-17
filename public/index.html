@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GridTask - Gestão de Tarefas</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        h1 { color: #333; text-align: center; }
+        input, button { padding: 10px; margin: 5px 0; font-size: 16px; }
+        input[type="text"] { width: 70%; }
+        button { background-color: #28a745; color: white; border: none; cursor: pointer; border-radius: 4px; }
+        button:hover { background-color: #218838; }
+        ul { list-style-type: none; padding: 0; }
+        li { background: #e9ecef; margin-top: 8px; padding: 10px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; }
+        .delete-btn { background-color: #dc3545; padding: 5px 10px; font-size: 12px; }
+        .delete-btn:hover { background-color: #c82333; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>GridTask 🏎️</h1>
+        <div>
+            <input type="text" id="taskInput" placeholder="Digite uma nova tarefa...">
+            <button onclick="addTask()">Adicionar</button>
+        </div>
+        <ul id="taskList"></ul>
+    </div>
+
+    <script>
+        // Função para carregar as tarefas do servidor ao abrir a página
+        async function loadTasks() {
+            try {
+                const response = await fetch('/api/tasks');
+                const tasks = await response.json();
+                
+                const list = document.getElementById('taskList');
+                list.innerHTML = '';
+                
+                tasks.forEach(task => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `${task.text} <button class="delete-btn" onclick="deleteTask(${task.id})">Remover</button>`;
+                    list.appendChild(li);
+                });
+            } catch (error) {
+                console.error('Erro ao carregar tarefas:', error);
+            }
+        }
+
+        // Função para adicionar uma nova tarefa via API
+        async function addTask() {
+            const input = document.getElementById('taskInput');
+            const taskText = input.value.trim();
+            if (taskText === '') return;
+
+            try {
+                await fetch('/api/tasks', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: taskText })
+                });
+
+                input.value = '';
+                loadTasks(); // Recarrega a lista
+            } catch (error) {
+                console.error('Erro ao adicionar tarefa:', error);
+            }
+        }
+
+        // Função para remover tarefa via API
+        async function deleteTask(id) {
+            try {
+                await fetch(`/api/tasks/${id}`, {
+                    method: 'DELETE'
+                });
+                loadTasks(); // Recarrega a lista
+            } catch (error) {
+                console.error('Erro ao remover tarefa:', error);
+            }
+        }
+
+        // Carregar tarefas assim que a página abrir
+        loadTasks();
+    </script>
+</body>
+</html>
